@@ -1,0 +1,3 @@
+﻿  compressor.cpp
+C:\Users\th3_5had0w\Desktop\huffman-compression\compressor.cpp(12,27): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  huffman-compression.vcxproj -> C:\Users\th3_5had0w\Desktop\huffman-compression\x64\Debug\huffman-compression.exe
