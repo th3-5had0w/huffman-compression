@@ -13,7 +13,7 @@ public:
 	fileHandler();
 	void readFileData(WCHAR* inFilePath);
 	void writeFileData(WCHAR* outFilePath);
-	WCHAR* getBuffer();
+	WCHAR* getOutpBuffer();
 	~fileHandler();
 };
 

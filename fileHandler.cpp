@@ -41,9 +41,9 @@ void fileHandler::writeFileData(WCHAR* outFilePath) {
 	}
 }
 
-WCHAR* fileHandler::getBuffer() {
-	if (!fileHandler::outBuf) {
-		return fileHandler::outBuf; 
+WCHAR* fileHandler::getOutpBuffer() {
+	if (fileHandler::outBuf) {
+		return fileHandler::outBuf;
 	}
 	std::cout << "Data not loading in buffer!" << std::endl;
 	exit(1);

@@ -11,8 +11,11 @@ int wmain(int argc, WCHAR *argv[])
     
     compressor* fCompressor = new compressor(argv[1]);
     */
-    fileHandler* handler = new fileHandler();
-    compressor* ha = new compressor();
+    fileHandler* fHandler = new fileHandler();
+    compressor* Kompressor = new compressor();
+    fHandler->readFileData((WCHAR*)L"hehe.txt");
+    Kompressor->getBuffer(fHandler);
+    Kompressor->cHeapifier(0);
     return 0;
 }
 
