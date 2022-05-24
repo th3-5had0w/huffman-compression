@@ -9,7 +9,7 @@ void compressor::getBuffer(fileHandler *fHandler) {
 }
 
 void compressor::cHeapifier() {
-	int bufLen = wcslen(L"A");
+	int bufLen = wcslen(compressor::dataBuffer);
 }
 
 compressor::~compressor() {
