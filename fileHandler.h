@@ -10,6 +10,9 @@ private:
 	char* outBuf;
 	LARGE_INTEGER infSize;
 public:
+	size_t inBufLen;
+	size_t outBufLen;
+
 	fileHandler();
 	void readFileData(WCHAR* inFilePath);
 	void writeFileData(WCHAR* outFilePath);

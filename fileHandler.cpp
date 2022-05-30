@@ -4,7 +4,9 @@ fileHandler::fileHandler() {
 	infHandler = 0;
 	outfHandler = 0;
 	tmpBuf = 0;
+	inBufLen = 0;
 	outBuf = 0;
+	outBufLen = 0;
 }
 
 void fileHandler::readFileData(WCHAR* inFilePath) {
@@ -18,6 +20,7 @@ void fileHandler::readFileData(WCHAR* inFilePath) {
 		std::cout << "Cannot get file size!" << std::endl;
 		exit(1);
 	}
+	inBufLen = infSize.QuadPart;
 	tmpBuf = new char[infSize.QuadPart];
 	DWORD byteRead;
 	if (!ReadFile(infHandler, tmpBuf, infSize.QuadPart, &byteRead, NULL)) {
