@@ -1,4 +1,0 @@
-﻿  fileHandler.cpp
-C:\Users\th3_5had0w\Desktop\huffman-compression\fileHandler.cpp(23,43): warning C4244: 'argument': conversion from 'LONGLONG' to 'DWORD', possible loss of data
-C:\Users\th3_5had0w\Desktop\huffman-compression\fileHandler.cpp(38,66): warning C4244: 'argument': conversion from 'LONGLONG' to 'DWORD', possible loss of data
-  huffman-compression.vcxproj -> C:\Users\th3_5had0w\Desktop\huffman-compression\x64\Debug\huffman-compression.exe

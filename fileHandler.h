@@ -14,6 +14,7 @@ public:
 	void readFileData(WCHAR* inFilePath);
 	void writeFileData(WCHAR* outFilePath);
 	WCHAR* getOutpBuffer();
+	WCHAR* getInpBuffer();
 	~fileHandler();
 };
 
