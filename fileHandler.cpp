@@ -18,13 +18,13 @@ void fileHandler::readFileData(WCHAR* inFilePath) {
 		std::cout << "Cannot get file size!" << std::endl;
 		exit(1);
 	}
-	tmpBuf = new WCHAR[infSize.QuadPart];
+	tmpBuf = new char[infSize.QuadPart];
 	DWORD byteRead;
 	if (!ReadFile(infHandler, tmpBuf, infSize.QuadPart, &byteRead, NULL)) {
 		std::cout << "Cannot read file!" << std::endl;
 		exit(1);
 	}
-	WCHAR* b = (WCHAR*)tmpBuf;
+	//WCHAR* b = (WCHAR*)tmpBuf;
 }
 
 void fileHandler::writeFileData(WCHAR* outFilePath) {
@@ -41,7 +41,7 @@ void fileHandler::writeFileData(WCHAR* outFilePath) {
 	}
 }
 
-WCHAR* fileHandler::getInpBuffer() {
+char* fileHandler::getInpBuffer() {
 	if (fileHandler::tmpBuf) {
 		return fileHandler::tmpBuf;
 	}
@@ -49,7 +49,7 @@ WCHAR* fileHandler::getInpBuffer() {
 	exit(1);
 }
 
-WCHAR* fileHandler::getOutpBuffer() {
+char* fileHandler::getOutpBuffer() {
 	if (fileHandler::outBuf) {
 		return fileHandler::outBuf;
 	}

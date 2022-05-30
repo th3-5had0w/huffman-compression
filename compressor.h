@@ -5,7 +5,7 @@
 class compressor
 {
 private:
-	WCHAR* dataBuffer;
+	char* dataBuffer;
 	size_t bufLength;
 public:
 	compressor();

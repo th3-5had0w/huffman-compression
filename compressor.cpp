@@ -7,7 +7,7 @@ compressor::compressor() {
 
 void compressor::getBuffer(fileHandler *fHandler) {
 	compressor::dataBuffer = fHandler->getInpBuffer();
-	compressor::bufLength = wcslen(compressor::dataBuffer);
+	compressor::bufLength = strlen(compressor::dataBuffer);
 }
 
 void compressor::cHeapifier(size_t root = 0) {

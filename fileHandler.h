@@ -6,15 +6,15 @@ class fileHandler
 private:
 	HANDLE infHandler;
 	HANDLE outfHandler;
-	WCHAR* tmpBuf;
-	WCHAR* outBuf;
+	char* tmpBuf;
+	char* outBuf;
 	LARGE_INTEGER infSize;
 public:
 	fileHandler();
 	void readFileData(WCHAR* inFilePath);
 	void writeFileData(WCHAR* outFilePath);
-	WCHAR* getOutpBuffer();
-	WCHAR* getInpBuffer();
+	char* getOutpBuffer();
+	char* getInpBuffer();
 	~fileHandler();
 };
 
