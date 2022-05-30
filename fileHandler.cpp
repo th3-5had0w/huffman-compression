@@ -22,10 +22,14 @@ void fileHandler::readFileData(WCHAR* inFilePath) {
 	}
 	inBufLen = infSize.QuadPart;
 	tmpBuf = new char[infSize.QuadPart];
+	inpBuf = new short[infSize.QuadPart+1];
 	DWORD byteRead;
 	if (!ReadFile(infHandler, tmpBuf, infSize.QuadPart, &byteRead, NULL)) {
 		std::cout << "Cannot read file!" << std::endl;
 		exit(1);
+	}
+	for (size_t i = 0; i < infSize.QuadPart; ++i) {
+		inpBuf[i] = tmpBuf[i];
 	}
 	//WCHAR* b = (WCHAR*)tmpBuf;
 }
@@ -44,15 +48,15 @@ void fileHandler::writeFileData(WCHAR* outFilePath) {
 	}
 }
 
-char* fileHandler::getInpBuffer() {
-	if (fileHandler::tmpBuf) {
-		return fileHandler::tmpBuf;
+short* fileHandler::getInpBuffer() {
+	if (fileHandler::inpBuf) {
+		return fileHandler::inpBuf;
 	}
 	std::cout << "Input data not loading in buffer!" << std::endl;
 	exit(1);
 }
 
-char* fileHandler::getOutpBuffer() {
+short* fileHandler::getOutpBuffer() {
 	if (fileHandler::outBuf) {
 		return fileHandler::outBuf;
 	}
