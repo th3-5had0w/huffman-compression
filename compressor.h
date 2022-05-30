@@ -15,38 +15,20 @@ public:
 	minHeapNode();
 	minHeapNode(size_t chr, size_t freq);
 };
-/*
-struct MinHeapNode {
 
-	// One of the input characters
-	char data;
-
-	// Frequency of the character
-	unsigned freq;
-
-	MinHeapNode* left, * right;
-
-	MinHeapNode(char data, unsigned freq)
-	{
-
-		left = right = NULL;
-		this->data = data;
-		this->freq = freq;
-	}
-};
-*/
 class compressor
 {
 private:
-	char* dataBuffer;
+	short* dataBuffer;
 	size_t bufLength;
-	minHeapNode** chrList = new minHeapNode * [256];
+	minHeapNode** chrList = new minHeapNode * [256+1]; // plus one for pseudo eof
+	std::map<size_t, std::string>* chrMapTable;
+	void huffmanCodeGen(minHeapNode* root, std::string str);
 public:
 	compressor();
 	void getBuffer(fileHandler *fHandler);
 	void calcCharFrequency();
 	void huffmanBuild();
-	void cHeapifier(size_t root);
 	~compressor();
 };
 

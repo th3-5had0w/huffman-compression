@@ -16,7 +16,9 @@ minHeapNode::minHeapNode(size_t chr, size_t freq) {
 compressor::compressor() {
 	compressor::dataBuffer = 0;
 	compressor::bufLength = 0;
-	for (size_t i = 0; i < 256; ++i) {
+	compressor::chrMapTable = 0;
+	//plus one for pseudo eof
+	for (size_t i = 0; i < 256+1; ++i) {
 		compressor::chrList[i] = new minHeapNode();
 	}
 }
@@ -24,7 +26,8 @@ compressor::compressor() {
 //get buffer pointer from filehandler
 void compressor::getBuffer(fileHandler *fHandler) {
 	compressor::dataBuffer = fHandler->getInpBuffer();
-	compressor::bufLength = fHandler->inBufLen;
+	compressor::bufLength = fHandler->inBufLen+1;
+	compressor::dataBuffer[compressor::bufLength-1] = 0x100;
 }
 
 void compressor::calcCharFrequency() {
@@ -36,9 +39,23 @@ void compressor::calcCharFrequency() {
 	}
 }
 
+void compressor::huffmanCodeGen(minHeapNode* root, std::string str) {
+	if (!root) {
+		return;
+	}
+
+	if (root->chr != 0xcafe) {
+		chrMapTable->insert(std::pair<size_t, std::string>(root->chr, str));
+	}
+
+	compressor::huffmanCodeGen(root->left, str + "0");
+	compressor::huffmanCodeGen(root->right, str + "1");
+}
+
 void compressor::huffmanBuild() {
 	minHeapNode* left, * right, * top;
-
+	compressor::chrMapTable = new std::map<size_t, std::string>;
+	// prerequisite class for priority queue data structure
 	class compare {
 	public:
 		bool operator()(minHeapNode* l, minHeapNode* r) {
@@ -46,13 +63,16 @@ void compressor::huffmanBuild() {
 		}
 	};
 
+	// put all chars appear in data string into priority based on their frequencies
 	std::priority_queue<minHeapNode*, std::vector<minHeapNode*>, compare> minHeap;
-	for (size_t i = 0; i < 256; ++i) {
+	for (size_t i = 0; i < 256+1; ++i) { // plus one for pseudo eof
 		if (compressor::chrList[i]->chr != 0xdeadbeef) {
 			minHeap.push(compressor::chrList[i]);
 		}
 	}
 
+	// take the 2 smallest frequency nodes to form a new subtree
+	// repeat again and again until there's only one node left in the queue (root node)
 	while (minHeap.size() != 1) {
 		left = minHeap.top();
 		minHeap.pop();
@@ -65,31 +85,9 @@ void compressor::huffmanBuild() {
 		minHeap.push(top);
 	}
 
+	compressor::huffmanCodeGen(minHeap.top(), "");
 }
 
-/*
-void compressor::cHeapifier(size_t root = 0) {
-	size_t bufLen = compressor::bufLength;
-	size_t largest = root;
-	size_t i = bufLen / 2 - 1;
-	size_t leftNode = root * 2 + 1;
-	size_t rightNode = root * 2 + 2;
-	if (leftNode < bufLen) {
-		if (compressor::dataBuffer[leftNode] > largest) {
-			std::swap(compressor::dataBuffer[largest], compressor::dataBuffer[leftNode]);
-			largest = leftNode;
-		}
-		cHeapifier(leftNode);
-	}
-	if (rightNode < bufLen) {
-		if (compressor::dataBuffer[rightNode] > largest) {
-			std::swap(compressor::dataBuffer[largest], compressor::dataBuffer[rightNode]);
-			largest = rightNode;
-		}
-		cHeapifier(rightNode);
-	}
-}
-*/
 //destructor
 compressor::~compressor() {
 	compressor::dataBuffer = 0;
