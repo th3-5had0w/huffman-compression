@@ -73,6 +73,7 @@ void compressor::huffmanBuild() {
 
 	// take the 2 smallest frequency nodes to form a new subtree
 	// repeat again and again until there's only one node left in the queue (root node)
+	// idea: http://web.stanford.edu/class/archive/cs/cs106x/cs106x.1174/assnFiles/assign6/huffman-encoding-supplement.pdf
 	while (minHeap.size() != 1) {
 		left = minHeap.top();
 		minHeap.pop();
@@ -84,8 +85,26 @@ void compressor::huffmanBuild() {
 		top->right = right;
 		minHeap.push(top);
 	}
-
 	compressor::huffmanCodeGen(minHeap.top(), "");
+}
+
+std::string compressor::createFromChrMapTable() {
+	std::map <size_t, std::string>::iterator j;
+	for (size_t i = 0; i < compressor::bufLength; ++i) {
+		for (j = chrMapTable->begin(); j != chrMapTable->end(); ++j) {
+			if (j->first == compressor::dataBuffer[i]) {
+				compressor::bitstr += j->second;
+				break;
+			}
+		}
+	}
+
+	//padding up to a number that is a multiple of 8 (1 * n bytes)
+	while ((compressor::bitstr.size() & 0x7) != 0) {
+		compressor::bitstr += "0";
+	}
+	std::cout << compressor::bitstr << std::endl;
+	return compressor::bitstr;
 }
 
 //destructor

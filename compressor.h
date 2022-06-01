@@ -23,12 +23,14 @@ private:
 	size_t bufLength;
 	minHeapNode** chrList = new minHeapNode * [256+1]; // plus one for pseudo eof
 	std::map<size_t, std::string>* chrMapTable;
+	std::string bitstr = "";
 	void huffmanCodeGen(minHeapNode* root, std::string str);
 public:
 	compressor();
 	void getBuffer(fileHandler *fHandler);
 	void calcCharFrequency();
 	void huffmanBuild();
+	std::string createFromChrMapTable();
 	~compressor();
 };
 
