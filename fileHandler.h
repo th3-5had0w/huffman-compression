@@ -8,7 +8,7 @@ private:
 	HANDLE outfHandler;
 	char* tmpBuf;
 	short* inpBuf;
-	short* outBuf;
+	unsigned char* outBuf;
 	LARGE_INTEGER infSize;
 public:
 	size_t inBufLen;

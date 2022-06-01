@@ -17,6 +17,8 @@ int wmain(int argc, WCHAR *argv[])
     Compressor->getBuffer(fHandler);
     Compressor->calcCharFrequency();
     Compressor->huffmanBuild();
+    fHandler->setOutpBuffer(Compressor->createFromChrMapTable());
+    fHandler->writeFileData((WCHAR*)L"hoho.txt");
     return 0;
 }
 

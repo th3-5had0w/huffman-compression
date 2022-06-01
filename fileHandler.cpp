@@ -42,7 +42,7 @@ void fileHandler::writeFileData(WCHAR* outFilePath) {
 	}
 
 	DWORD byteWritten;
-	if (!fileHandler::infSize.QuadPart || !WriteFile(fileHandler::outfHandler, fileHandler::outBuf, fileHandler::infSize.QuadPart, &byteWritten, NULL)) {
+	if (!fileHandler::outBufLen || !WriteFile(fileHandler::outfHandler, fileHandler::outBuf, fileHandler::outBufLen, &byteWritten, NULL)) {
 		std::cout << "Cannot file write!" << std::endl;
 		exit(1);
 	}
@@ -57,10 +57,13 @@ short* fileHandler::getInpBuffer() {
 }
 
 void fileHandler::setOutpBuffer(std::string bitstr) {
+	fileHandler::outBuf = new unsigned char[bitstr.size()];
+	fileHandler::outBufLen = bitstr.size() / 8;
 	for (size_t i = 0; i < bitstr.size() / 8; ++i) {
 		std::cout << bitstr.substr(i * 8, 8) << std::endl;
 		std::bitset<8> bStream(bitstr.substr(i * 8, 8));
-		std::cout << bStream.to_ulong() << std::endl;
+		fileHandler::outBuf[i] = LOBYTE(bStream.to_ulong());
+		std::cout << (bStream.to_ulong() & 0xff) << std::endl;
 	}
 	//std::cout << "Output data not loading in buffer!" << std::endl;
 	//exit(1);
