@@ -17,7 +17,7 @@ public:
 	fileHandler();
 	void readFileData(WCHAR* inFilePath);
 	void writeFileData(WCHAR* outFilePath);
-	short* getOutpBuffer();
+	void setOutpBuffer(std::string bitstr);
 	short* getInpBuffer();
 	~fileHandler();
 };
