@@ -17,6 +17,8 @@ compressor::compressor() {
 	compressor::dataBuffer = 0;
 	compressor::bufLength = 0;
 	compressor::chrMapTable = 0;
+	compressor::chrList = new minHeapNode * [256 + 1];
+	compressor::bitstr = "";
 	//plus one for pseudo eof
 	for (size_t i = 0; i < 256+1; ++i) {
 		compressor::chrList[i] = new minHeapNode();
@@ -31,6 +33,12 @@ void compressor::getBuffer(fileHandler *fHandler) {
 }
 
 void compressor::calcCharFrequency() {
+	for (size_t i = 0; i < 257; ++i) {
+		if (compressor::chrList[i]->freq != 0) {
+			compressor::chrList[i]->chr = 0xdeadbeef;
+			compressor::chrList[i]->freq = 0;
+		}
+	}
 	for (size_t i = 0; i < compressor::bufLength; ++i) {
 		if (compressor::chrList[compressor::dataBuffer[i]]->chr == 0xdeadbeef) {
 			compressor::chrList[compressor::dataBuffer[i]]->chr = compressor::dataBuffer[i];
@@ -54,8 +62,15 @@ void compressor::huffmanCodeGen(minHeapNode* root, std::string str) {
 
 void compressor::huffmanBuild() {
 	minHeapNode* left, * right, * top;
+	if (compressor::chrMapTable != 0) {
+		compressor::chrMapTable->clear();
+		delete compressor::chrMapTable;
+		compressor::chrMapTable = 0;
+	}
 	compressor::chrMapTable = new std::map<size_t, std::string>;
-	// prerequisite class for priority queue data structure
+
+	/*
+	// prerequisite class for priority queue data structure's comparison
 	class compare {
 	public:
 		bool operator()(minHeapNode* l, minHeapNode* r) {
@@ -64,14 +79,20 @@ void compressor::huffmanBuild() {
 	};
 
 	// put all chars appear in data string into priority based on their frequencies
-	std::priority_queue<minHeapNode*, std::vector<minHeapNode*>, compare> minHeap;
+	//std::priority_queue<minHeapNode*, std::vector<minHeapNode*>, compare> minHeap;
+	*/
+
+	while (minHeap.size() > 0) {
+		minHeap.pop();
+	}
+
 	for (size_t i = 0; i < 256+1; ++i) { // plus one for pseudo eof
 		if (compressor::chrList[i]->chr != 0xdeadbeef) {
 			minHeap.push(compressor::chrList[i]);
 		}
 	}
 
-	// take the 2 smallest frequency nodes to form a new subtree
+	// take the 2 smallest-frequency nodes to form a new subtree
 	// repeat again and again until there's only one node left in the queue (root node)
 	// idea: http://web.stanford.edu/class/archive/cs/cs106x/cs106x.1174/assnFiles/assign6/huffman-encoding-supplement.pdf
 	while (minHeap.size() != 1) {
@@ -89,9 +110,13 @@ void compressor::huffmanBuild() {
 }
 
 std::string compressor::createFromChrMapTable() {
+	compressor::bitstr.clear();
+	if (compressor::chrMapTable->empty() || compressor::chrMapTable == 0) {
+		std::cout << "compressor::createFromChrMapTable -> Map table not created!" << std::endl;
+	}
 	std::map <size_t, std::string>::iterator j;
 	for (size_t i = 0; i < compressor::bufLength; ++i) {
-		for (j = chrMapTable->begin(); j != chrMapTable->end(); ++j) {
+		for (j = compressor::chrMapTable->begin(); j != compressor::chrMapTable->end(); ++j) {
 			if (j->first == compressor::dataBuffer[i]) {
 				compressor::bitstr += j->second;
 				break;
@@ -109,6 +134,14 @@ std::string compressor::createFromChrMapTable() {
 
 //destructor
 compressor::~compressor() {
+	for (size_t i = 0; i < 256 + 1; ++i) {
+		delete compressor::chrList[i];
+		compressor::chrList[i] = 0;
+	}
+	delete[] compressor::chrList;
+	delete compressor::chrMapTable;
+	compressor::chrList = 0;
+	compressor::chrMapTable = 0;
 	compressor::dataBuffer = 0;
 	compressor::bufLength = 0;
 }

@@ -1,8 +1,10 @@
 ### Demo 1
 
-Test với file mẫu hehe.txt có 10 bytes với content là heheboiiii đã được nén tạo thành các bits ngắn hơn
+Demonstration: Test với file mẫu hehe.txt có 10 bytes với content là heheboiiii đã được nén tạo thành các bits ngắn hơn (file hoho.txt)
 
 -> [Đọc file](https://github.com/th3-5had0w/huffman-compression/blob/master/fileHandler.cpp#L13)
+
+-> Thêm EOF ảo để tránh các padding bit làm sai lệch kết quả khi decompress
 
 -> [Tính frequency của các chars](https://github.com/th3-5had0w/huffman-compression/blob/master/compressor.cpp#L33)
 

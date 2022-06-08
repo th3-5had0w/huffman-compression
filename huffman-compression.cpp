@@ -1,8 +1,46 @@
 ﻿#include "compressor.h"
 #include "fileHandler.h"
 
+int huffmanProcess(fileHandler* fHandler, compressor* Compressor, WCHAR* inpFile, WCHAR* outFile) {
+    fHandler->readFileData(inpFile);
+    Compressor->getBuffer(fHandler);
+    Compressor->calcCharFrequency();
+    Compressor->huffmanBuild();
+    fHandler->setOutpBuffer(Compressor->createFromChrMapTable());
+    fHandler->writeFileData(outFile);
+    return 0;
+}
+
 int wmain(int argc, WCHAR *argv[])
 {
+    fileHandler* fHandler = new fileHandler();
+    compressor* Compressor = new compressor();
+    WIN32_FIND_DATAW findStruct = { 0 };
+    HANDLE findHandler = 0;
+    std::wstring fNameIn = L".\\Uncompressed\\";
+    std::wstring fNameOut = L".\\Compressed\\";
+
+    // first 2 files are ./ and ../ so we don't need to process these.
+    findHandler = FindFirstFileW(L".\\Uncompressed\\*", &findStruct);
+    if (findHandler == INVALID_HANDLE_VALUE) {
+        std::cout << "main -> FindFirstFileA returned: " << GetLastError() << std::endl;
+        exit(1);
+    }
+    else {
+        if (FindNextFileW(findHandler, &findStruct) == 0) {
+            std::cout << "main -> FindNextFileA returned: " << GetLastError() << std::endl;
+        }
+    }
+
+    while (FindNextFileW(findHandler, &findStruct) != 0) {
+        fNameIn = L".\\Uncompressed\\";
+        fNameOut = L".\\Compressed\\";
+        fNameIn += findStruct.cFileName;
+        fNameOut += findStruct.cFileName;
+        fNameOut += L".cps";
+        huffmanProcess(fHandler, Compressor, (WCHAR*)fNameIn.data(), (WCHAR*)fNameOut.data());
+    }
+    //std::wstring asdc = L"dcscdscsc";
     /*
     if (argc != 2) {
         std::wcout << "Usage: " << argv[0] << " <filepath>" << std::endl;
@@ -11,8 +49,7 @@ int wmain(int argc, WCHAR *argv[])
     
     compressor* fCompressor = new compressor(argv[1]);
     */
-    fileHandler* fHandler = new fileHandler();
-    compressor* Compressor = new compressor();
+    /*
     fHandler->readFileData((WCHAR*)L"hehe.txt");
     Compressor->getBuffer(fHandler);
     Compressor->calcCharFrequency();
@@ -20,6 +57,7 @@ int wmain(int argc, WCHAR *argv[])
     fHandler->setOutpBuffer(Compressor->createFromChrMapTable());
     fHandler->writeFileData((WCHAR*)L"hoho.txt");
     return 0;
+    */
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
